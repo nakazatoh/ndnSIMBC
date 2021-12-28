@@ -64,6 +64,7 @@ bool
 Entry::hasTableEntries() const
 {
   return m_fibEntry != nullptr ||
+         m_bctEntry != nullptr ||
          !m_pitEntries.empty() ||
          m_measurementsEntry != nullptr ||
          m_strategyChoiceEntry != nullptr;
@@ -81,6 +82,21 @@ Entry::setFibEntry(unique_ptr<fib::Entry> fibEntry)
 
   if (m_fibEntry != nullptr) {
     m_fibEntry->m_nameTreeEntry = this;
+  }
+}
+
+void
+Entry::setBctEntry(unique_ptr<bct::Entry> bctEntry)
+{
+  BOOST_ASSERT(bctEntry == nullptr || bctEntry->m_nameTreeEntry == nullptr);
+
+  if (m_bctEntry != nullptr) {
+    m_bctEntry->m_nameTreeEntry = nullptr;
+  }
+  m_bctEntry = std::move(bctEntry);
+
+  if (m_bctEntry != nullptr) {
+    m_bctEntry->m_nameTreeEntry = this;
   }
 }
 

@@ -3,8 +3,8 @@
 #ifndef NFD_DAEMON_TABLE_BCT_ENTRY_HPP
 #define NFD_DAEMON_TABLE_BCT_ENTRY_HPP
 
-#include "fib-nexthop.hpp"
-#include "ns-3/nstime.h"
+#include "bct-nexthop.hpp"
+#include "ns3/nstime.h"
 
 namespace nfd {
 
@@ -91,15 +91,15 @@ private:
   
   Name m_prefix;
   NextHopList m_nextHops;
-  Time m_timestamp;
+  ::ns3::Time m_timestamp;
 
   name_tree::Entry* m_nameTreeEntry = nullptr;
 
   friend class name_tree::Entry;
-  friend class Cbt;
+  friend class Bct;
 };
 
-} // namespace cbt
+} // namespace bct
 } // namespace nfd
 
 #endif // NFD_DAEMON_TABLE_CS_ENTRY_HPP

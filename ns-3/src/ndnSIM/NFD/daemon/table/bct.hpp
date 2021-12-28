@@ -6,6 +6,8 @@
 #include "bct-entry.hpp"
 #include "name-tree.hpp"
 
+#include <boost/range/adaptor/transformed.hpp>
+
 namespace nfd {
 
 namespace measurements {
@@ -123,7 +125,7 @@ public: // enumeration
 public: // signal
   /** \brief signals on Fib entry nexthop creation
    */
-  signal::Signal<Fib, Name, NextHop> afterNewNextHop;
+  signal::Signal<Bct, Name, NextHop> afterNewNextHop;
 
 private:
   /** \tparam K a parameter acceptable to NameTree::findLongestPrefixMatch
@@ -152,7 +154,7 @@ private:
 
 } // namespace fib
 
-using fib::Fib;
+using bct::Bct;
 
 } // namespace nfd
 

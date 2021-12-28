@@ -31,6 +31,7 @@
 #include "unsolicited-data-policy.hpp"
 #include "face/face-endpoint.hpp"
 #include "table/fib.hpp"
+#include "table/bct.hpp"
 #include "table/pit.hpp"
 #include "table/cs.hpp"
 #include "table/measurements.hpp"
@@ -285,6 +286,7 @@ private:
 
   NameTree           m_nameTree;
   Fib                m_fib;
+  Bct                m_bct;
   Pit                m_pit;
   Cs                 m_cs;
   Measurements       m_measurements;

@@ -8,7 +8,7 @@ namespace bct {
 
 Entry::Entry(const Name& prefix)
   : m_prefix(prefix)
-  , m_timestamp(Simulator::Now())
+  , m_timestamp(::ns3::Simulator::Now())
 {
 }
 
