@@ -76,6 +76,14 @@ PUBLIC_WITH_TESTS_ELSE_PRIVATE:
   static const time::milliseconds RETX_SUPPRESSION_MAX;
   RetxSuppressionExponential m_retxSuppression;
 
+private:
+  static const time::seconds BC_THRESHOLD;
+
+  /** \brief performs a BCT lookup, considering Link object if present
+   */
+  const bct::Entry&
+  lookupBct(const pit::Entry& pitEntry) const;
+
   friend ProcessNackTraits<BestRouteBCStrategy>;
 };
 

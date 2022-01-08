@@ -413,6 +413,10 @@ Forwarder::onOutgoingData(const Data& data, const FaceEndpoint& egress)
   }
 
   // TODO traffic manager
+  if (egress.face.getScope() == ndn::nfd::FACE_SCOPE_NON_LOCAL) {
+    bct::Entry& bctEntry = *m_bct.insert(data.getName()).first;
+    m_bct.addOrUpdateNextHop(bctEntry, egress.face);
+  }
 
   // send Data
   egress.face.sendData(data, egress.endpoint);

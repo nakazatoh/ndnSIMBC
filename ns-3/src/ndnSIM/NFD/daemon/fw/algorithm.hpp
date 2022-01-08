@@ -29,6 +29,8 @@
 #include "fw/scope-prefix.hpp"
 #include "table/fib.hpp"
 #include "table/pit-entry.hpp"
+#include "table/bct.hpp"
+#include "table/bct-entry.hpp"
 
 /** \file
  *  This file contains common algorithms used by forwarding strategies.
@@ -103,6 +105,13 @@ findEligibleNextHopWithEarliestOutRecord(const Face& inFace, const Interest& int
 bool
 isNextHopEligible(const Face& inFace, const Interest& interest,
                   const fib::NextHop& nexthop,
+                  const shared_ptr<pit::Entry>& pitEntry,
+                  bool wantUnused = false,
+                  time::steady_clock::TimePoint now = time::steady_clock::TimePoint::min());
+
+bool
+isBctNextHopEligible(const Face& inFace, const Interest& interest,
+                  const bct::NextHop& nexthop,
                   const shared_ptr<pit::Entry>& pitEntry,
                   bool wantUnused = false,
                   time::steady_clock::TimePoint now = time::steady_clock::TimePoint::min());

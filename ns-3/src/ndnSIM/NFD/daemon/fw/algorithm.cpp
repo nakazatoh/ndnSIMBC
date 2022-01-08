@@ -174,5 +174,29 @@ isNextHopEligible(const Face& inFace, const Interest& interest,
   return true;
 }
 
+bool
+isBctNextHopEligible(const Face& inFace, const Interest& interest,
+                  const bct::NextHop& nexthop,
+                  const shared_ptr<pit::Entry>& pitEntry,
+                  bool wantUnused,
+                  time::steady_clock::TimePoint now)
+{
+  const Face& outFace = nexthop.getFace();
+
+  // do not forward back to the same face, unless it is ad hoc
+  if ((outFace.getId() == inFace.getId() && outFace.getLinkType() != ndn::nfd::LINK_TYPE_AD_HOC) ||
+     (wouldViolateScope(inFace, interest, outFace)))
+    return false;
+
+  if (wantUnused) {
+    // nexthop must not have unexpired out-record
+    auto outRecord = pitEntry->getOutRecord(outFace);
+    if (outRecord != pitEntry->out_end() && outRecord->getExpiry() > now) {
+      return false;
+    }
+  }
+  return true;
+}
+
 } // namespace fw
 } // namespace nfd

@@ -8,7 +8,6 @@ namespace bct {
 
 Entry::Entry(const Name& prefix)
   : m_prefix(prefix)
-  , m_timestamp(::ns3::Simulator::Now())
 {
 }
 
@@ -28,7 +27,7 @@ Entry::hasNextHop(const Face& face) const
 }
 
 std::pair<NextHopList::iterator, bool>
-Entry::addOrUpdateNextHop(Face& face, uint64_t cost)
+Entry::addOrUpdateNextHop(Face& face, time::steady_clock::TimePoint timestamp)
 {
   auto it = this->findNextHop(face);
   bool isNew = false;
@@ -38,7 +37,7 @@ Entry::addOrUpdateNextHop(Face& face, uint64_t cost)
     isNew = true;
   }
 
-  it->setCost(cost);
+  it->setTimestamp(timestamp);
   this->sortNextHops();
 
   return std::make_pair(it, isNew);
@@ -59,7 +58,17 @@ void
 Entry::sortNextHops()
 {
   std::sort(m_nextHops.begin(), m_nextHops.end(),
-            [] (const NextHop& a, const NextHop& b) { return a.getCost() < b.getCost(); });
+            [] (const NextHop& a, const NextHop& b) { return a.getTimestamp() > b.getTimestamp(); });
+}
+
+void
+Entry::removeTardyNextHops(time::steady_clock::TimePoint th_time)
+{
+  auto result = std::find_if(m_nextHops.begin(), m_nextHops.end(), 
+            [=](const NextHop& x){ return x.getTimestamp() < th_time; });
+  for (; result != m_nextHops.end(); result++) {
+    m_nextHops.erase(result);
+  }
 }
 
 } // namespace bct

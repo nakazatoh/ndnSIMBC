@@ -423,12 +423,14 @@ protected: // accessors
 private: // instance fields
   Name m_name;
 
+protected:
   /** \brief reference to the forwarder
    *
    *  Triggers can access forwarder indirectly via actions.
    */
   Forwarder& m_forwarder;
 
+private:
   MeasurementsAccessor m_measurements;
 
   bool m_wantNewNextHopTrigger = false;

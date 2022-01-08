@@ -85,7 +85,7 @@ public: // mutation
    *  If a NextHop record for \p face already exists in \p entry, its cost is set to \p cost.
    */
   void
-  addOrUpdateNextHop(Entry& entry, Face& face, uint64_t cost);
+  addOrUpdateNextHop(Entry& entry, Face& face, time::steady_clock::TimePoint timestamp = time::steady_clock::now());
 
   enum class RemoveNextHopResult {
     NO_SUCH_NEXTHOP, ///< the nexthop is not found
@@ -143,6 +143,7 @@ private:
 private:
   NameTree& m_nameTree;
   size_t m_nItems = 0;
+  time::seconds m_valid_duration = time::seconds(10);
 
   /** \brief The empty FIB entry.
    *

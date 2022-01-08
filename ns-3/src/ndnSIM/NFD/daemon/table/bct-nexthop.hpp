@@ -32,7 +32,7 @@
 namespace nfd {
 namespace bct {
 
-/** \brief Represents a nexthop record in a FIB entry
+/** \brief Represents a nexthop record in a BCT entry
  */
 class NextHop
 {
@@ -40,6 +40,7 @@ public:
   explicit
   NextHop(Face& face)
     : m_face(&face)
+    , m_timestamp(time::steady_clock::now())
   {
   }
 
@@ -49,21 +50,23 @@ public:
     return *m_face;
   }
 
-  uint64_t
-  getCost() const
+  time::steady_clock::TimePoint
+  getTimestamp() const
   {
-    return m_cost;
+    return m_timestamp;
   }
 
   void
-  setCost(uint64_t cost)
+  setTimestamp(time::steady_clock::TimePoint timestamp)
   {
-    m_cost = cost;
+    m_timestamp = timestamp;
   }
 
 private:
   Face* m_face; // pointer instead of reference so that NextHop is movable
-  uint64_t m_cost = 0;
+//  uint64_t m_cost = 0;
+//  time::steady_clock::TimePoint now = time::steady_clock::now();
+  time::steady_clock::TimePoint m_timestamp;
 };
 
 } // namespace bct

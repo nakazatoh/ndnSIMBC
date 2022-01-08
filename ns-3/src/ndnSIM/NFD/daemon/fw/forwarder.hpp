@@ -130,6 +130,12 @@ public: // forwarding entrypoints and tables
     return m_fib;
   }
 
+  Bct&
+  getBct()
+  {
+    return m_bct;
+  }
+
   Pit&
   getPit()
   {

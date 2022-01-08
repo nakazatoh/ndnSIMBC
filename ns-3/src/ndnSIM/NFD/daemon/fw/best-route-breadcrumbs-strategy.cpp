@@ -35,6 +35,7 @@ NFD_REGISTER_STRATEGY(BestRouteBCStrategy);
 
 const time::milliseconds BestRouteBCStrategy::RETX_SUPPRESSION_INITIAL(10);
 const time::milliseconds BestRouteBCStrategy::RETX_SUPPRESSION_MAX(250);
+const time::seconds BestRouteBCStrategy::BC_THRESHOLD(10);
 
 BestRouteBCStrategy::BestRouteBCStrategy(Forwarder& forwarder, const Name& name)
   : Strategy(forwarder)
@@ -71,11 +72,24 @@ BestRouteBCStrategy::afterReceiveInterest(const FaceEndpoint& ingress, const Int
     return;
   }
 
+
+  const bct::Entry& bctEntry = this->lookupBct(*pitEntry);
+  const bct::NextHopList& bctNexthops = bctEntry.getNextHops();
+  auto bctIt = bctNexthops.begin();
+
   const fib::Entry& fibEntry = this->lookupFib(*pitEntry);
   const fib::NextHopList& nexthops = fibEntry.getNextHops();
   auto it = nexthops.end();
 
   if (suppression == RetxSuppressionResult::NEW) {
+    // forward to nexthop in Breadcrumb table
+    
+    if ((bctIt != bctNexthops.end()) && isBctNextHopEligible(ingress.face, interest, *bctIt, pitEntry)) {
+      auto bctEgress = FaceEndpoint(bctIt->getFace(), 0);
+      this->sendInterest(pitEntry, bctEgress, interest);
+      return;
+    }
+    
     // forward to nexthop with lowest cost except downstream
     it = std::find_if(nexthops.begin(), nexthops.end(), [&] (const auto& nexthop) {
       return isNextHopEligible(ingress.face, interest, nexthop, pitEntry);
@@ -127,6 +141,17 @@ BestRouteBCStrategy::afterReceiveNack(const FaceEndpoint& ingress, const lp::Nac
                                      const shared_ptr<pit::Entry>& pitEntry)
 {
   this->processNack(ingress.face, nack, pitEntry);
+}
+
+const bct::Entry&
+BestRouteBCStrategy::lookupBct(const pit::Entry& pitEntry) const
+{
+  const Bct& bct = m_forwarder.getBct();
+
+  const Interest& interest = pitEntry.getInterest();
+  // BCT lookup with Interest name
+  const bct::Entry& bctEntry = bct.findLongestPrefixMatch(pitEntry);
+  return bctEntry;
 }
 
 } // namespace fw

@@ -4,7 +4,6 @@
 #define NFD_DAEMON_TABLE_BCT_ENTRY_HPP
 
 #include "bct-nexthop.hpp"
-#include "ns3/nstime.h"
 
 namespace nfd {
 
@@ -68,7 +67,7 @@ private:
    *  NextHop was inserted
    */
   std::pair<NextHopList::iterator, bool>
-  addOrUpdateNextHop(Face& face, uint64_t cost);
+  addOrUpdateNextHop(Face& face, time::steady_clock::TimePoint timestamp);
 
   /** \brief removes a NextHop record
    *
@@ -87,11 +86,13 @@ private:
   void
   sortNextHops();
 
+  void
+  removeTardyNextHops(time::steady_clock::TimePoint th_time);
+
 private:
   
   Name m_prefix;
   NextHopList m_nextHops;
-  ::ns3::Time m_timestamp;
 
   name_tree::Entry* m_nameTreeEntry = nullptr;
 

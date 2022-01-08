@@ -133,11 +133,12 @@ Bct::erase(const Entry& entry)
 }
 
 void
-Bct::addOrUpdateNextHop(Entry& entry, Face& face, uint64_t cost)
+Bct::addOrUpdateNextHop(Entry& entry, Face& face, time::steady_clock::TimePoint timestamp)
 {
   NextHopList::iterator it;
   bool isNew;
-  std::tie(it, isNew) = entry.addOrUpdateNextHop(face, cost);
+  std::tie(it, isNew) = entry.addOrUpdateNextHop(face, timestamp);
+  entry.removeTardyNextHops(time::steady_clock::now() - m_valid_duration);
 
   if (isNew)
     this->afterNewNextHop(entry.getPrefix(), *it);
