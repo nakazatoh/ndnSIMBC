@@ -31,7 +31,7 @@ coverity
 TAGS
 
 .lock-waf_*_build
-.waf*
+.waf3-*
 
 build-dir/
 build/
@@ -39,7 +39,7 @@ build/
 /.project
 
 *.pyc
-.waf*
+.waf3-*
 src/NDNabstraction
 build/
 doc/html/
