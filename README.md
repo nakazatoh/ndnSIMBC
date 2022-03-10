@@ -22,6 +22,8 @@ In addition, the following files are modified.
 * ns-3/src/ndnSIM/NFD/daemon/fw/algorithm.hpp
 * ns-3/src/ndnSIM/NFD/daemon/fw/algorithm.cpp
 * ns-3/src/ndnSIM/NFD/daemon/fw/strategy.hpp
+* ns-3/src/ndnSIM/NFD/daemon/table/name-tree-entry.hpp
+* ns-3/src/ndnSIM/NFD/daemon/table/name-tree-entry.cpp
 
 Furthermore, the follwoing files are created for testing purpose.
 
