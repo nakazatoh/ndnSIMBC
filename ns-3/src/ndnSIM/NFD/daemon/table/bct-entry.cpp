@@ -72,12 +72,12 @@ Entry::removeTardyNextHops(time::steady_clock::TimePoint th_time)
     for (result = m_nextHops.begin(); result != m_nextHops.end(); result++) {
       std::cout << "size:" << m_nextHops.size() << " timestamp:" << result->getTimestamp() << std::endl;
     }*/
-    m_nextHops.erase(std::remove_if(m_nextHops.begin(), m_nextHops.end(), [=](const NextHop& x){return x.getTimestamp() > th_time;}), m_nextHops.end());
+    m_nextHops.erase(std::remove_if(m_nextHops.begin(), m_nextHops.end(), [=](const NextHop& x){return x.getTimestamp() < th_time;}), m_nextHops.end());
     /*std::cout << "After| ";
     for (result = m_nextHops.begin(); result != m_nextHops.end(); result++) {
       std::cout << "size:" << m_nextHops.size() << " timestamp:" << result->getTimestamp() << std::endl;
     }
-  }*/
+  } */
 }
 
 } // namespace bct
